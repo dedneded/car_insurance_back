@@ -15,17 +15,18 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
+#ick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-pw2ec&8wrrqm2!*8_(0x16+wgfo4f94i&i1ud*9)oj2+p)eo(!'
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'cg#p$g+j9tax!#a3cup@1$8obt2_+&k3q+pmu)5%asj6yjpkag')
+SECRET_KEY='zoc2nlgjcc*5b&@vboksxd_((y6-&qtbq71vmuwyk==o9ddjp1'
+#SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'cg#p$g+j9tax!#a3cup@1$8obt2_+&k3q+pmu)5%asj6yjpkag')
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
-DEBUG = bool( os.environ.get('DJANGO_DEBUG', True))
-ALLOWED_HOSTS = []
+#DEBUG = bool( os.environ.get('DJANGO_DEBUG', True))
+DEBUG = True
+ALLOWED_HOSTS = ['www.myprojectcarinsurance.ru','myprojectcarinsurance.ru']
 
 
 # Application definition
@@ -77,16 +78,12 @@ WSGI_APPLICATION = 'car_insurance_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        #'NAME': 'insurancedb',
-        # 'USER': 'user',
-        # 'PASSWORD': '12345',
-        # 'HOST': 'localhost',
-        # 'PORT': '5432'
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'blayILTal0vUfmOktwLd',
-        'HOST': 'containers-us-west-93.railway.app',
-        'PORT': '5824'
+        'NAME': 'car_insurance',
+        'USER': 'car_insurance_user',
+        'PASSWORD': '12345',
+        'HOST': 'localhost',
+        'PORT': '5432'
+        
     }
 }
 
