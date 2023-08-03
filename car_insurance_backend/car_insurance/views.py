@@ -103,6 +103,17 @@ def get_employee(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+@api_view(['POST'])
+def authentification(request):
+    try:
+        phone = request.data.get('phone')
+        password = request.data.get('password')
+        employee = Employee.objects.get(Phone=phone, Password=password)
+        serializer = EmployeeSerializer(employee)
+        return Response(serializer.data)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
 @api_view(['DELETE'])
 def delete_employee(request, pk):
     try:
@@ -162,6 +173,23 @@ def get_passport(request, pk):
     except ObjectDoesNotExist as e:
         print(str(e))
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def get_actual_passport(request, client_id):
+    try:
+        passport = Passport.objects.filter(Client=client_id).order_by('-DateOfIssue')
+        if passport:
+                passport = passport[0]
+        else:
+                passport = None
+        serializer = PassportSerializer(passport)
+        return Response(serializer.data)
+
+    except ObjectDoesNotExist as e:
+        print(str(e))
+        return Response(status=status.HTTP_404_NOT_FOUND)
+	
 
 
 @api_view(['GET'])

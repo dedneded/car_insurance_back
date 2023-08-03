@@ -17,6 +17,7 @@ class Employee(models.Model):
     Phone = models.CharField(max_length=255)
     Email = models.CharField(max_length=255)
     Password = models.CharField(max_length=255)
+    IsAdmin = models.BooleanField(default=False)
     DateOfBirth = models.DateTimeField(null=False, blank=False)
     DateAdd = models.DateTimeField(null=False, blank=False, default=datetime.now())
     DateDel = models.DateTimeField(null=True, blank=True)
