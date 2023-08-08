@@ -252,11 +252,38 @@ def get_license(request, pk):
 
 
 @api_view(['GET'])
+def get_actual_license(request, client_id):
+    try:
+        license = License.objects.filter(Client=client_id).order_by('-DateOfIssue')
+        if license:
+                license= license[0]
+        else:
+                license= None
+        serializer = LicenseSerializer(license)
+        return Response(serializer.data)
+
+    except ObjectDoesNotExist as e:
+        print(str(e))
+        return Response(status=status.HTTP_404_NOT_FOUND)
+	
+
+@api_view(['GET'])
 def get_all_licenses(request):
     licenses = License.objects.all()
     serializer = LicenseSerializer(licenses, many=True)
     return Response(serializer.data)
 
+@api_view(['DELETE'])
+def delete_license(request, pk):
+    try:
+        license = License.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    license.DateDel = datetime.now()
+    license.save()
+
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['POST'])
 def create_car(request):
