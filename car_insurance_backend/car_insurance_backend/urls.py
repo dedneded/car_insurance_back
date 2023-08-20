@@ -48,5 +48,7 @@ urlpatterns = [
     path('cars/update_car/<int:pk>/', update_car, name='update_car'),
     path('cars/get_car/<int:pk>/', get_car, name='get_car'),
     path('cars/', get_all_cars, name='get_all_cars'),
+    path('cars/delete_car/<int:pk>/', delete_car, name='delete_car'),
+
 
 ]

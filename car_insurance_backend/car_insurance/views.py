@@ -330,4 +330,15 @@ def get_all_cars(request):
     serializer = CarSerializer(cars, many=True)
     return Response(serializer.data)
 
+@api_view(['DELETE'])
+def delete_car(request, pk):
+    try:
+        car = Car.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    car.DateDel = datetime.now()
+    car.save()
+
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
