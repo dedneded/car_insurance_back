@@ -25,6 +25,7 @@ urlpatterns = [
     path('clients/update_client/<int:pk>/', update_client, name='update_client'),
     path('clients/get_client/<int:pk>/', get_client, name='get_client'),
     path('clients/delete_client/<int:pk>/', delete_client, name='delete_client'),
+    path('clients/filter_clients_by_name/<str:name>/', filter_clients_by_name, name='filter_clients_by_name'),
     path('clients/', get_all_clients, name='get_all_clients'),
     path('employees/', get_all_employees, name='get_all_employees'),
     path('employees/create_employee/', create_employee, name='create_employee'),
@@ -49,6 +50,7 @@ urlpatterns = [
     path('cars/get_car/<int:pk>/', get_car, name='get_car'),
     path('cars/', get_all_cars, name='get_all_cars'),
     path('cars/delete_car/<int:pk>/', delete_car, name='delete_car'),
+    
 
 
 ]

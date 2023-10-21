@@ -330,6 +330,7 @@ def get_all_cars(request):
     serializer = CarSerializer(cars, many=True)
     return Response(serializer.data)
 
+
 @api_view(['DELETE'])
 def delete_car(request, pk):
     try:
@@ -341,4 +342,15 @@ def delete_car(request, pk):
     car.save()
 
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+def filter_clients_by_name(request, name):
+    # Фильтруем клиентов по имени (нечувствительно к регистру)
+    clients = Client.objects.filter(name__icontains=name)
+    
+    # Используем сериализатор для преобразования результатов в JSON
+    serializer = ClientSerializer(clients, many=True)
+    
+    return Response(serializer.data)
 
