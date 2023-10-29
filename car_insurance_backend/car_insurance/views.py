@@ -69,6 +69,24 @@ def get_all_clients(request):
     return Response(serializer.data)
 
 
+@api_view(['GET'])
+def filter_clients(request):
+    phone = request.GET.get('phone', None)
+    email = request.GET.get('email', None)
+    clients = None
+    if phone and email:
+        clients = Client.objects.filter(Phone__icontains=phone, Email__icontains=email)
+    elif phone:
+        clients = Client.objects.filter(Phone__icontains=phone)
+    elif email:
+        clients = Client.objects.filter(Email__icontains=email)
+    
+    # Используем сериализатор для преобразования результатов в JSON
+    serializer = ClientSerializer(clients, many=True)
+    
+    return Response(serializer.data)
+
+
 @api_view(['POST'])
 def create_employee(request):
     serializer = EmployeeSerializer(data=request.data)
@@ -191,12 +209,24 @@ def get_actual_passport(request, client_id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 	
 
+@api_view(['GET'])
+def get_all_passports(request, client_id):
+    try:
+        passports = Passport.objects.filter(Client=client_id).order_by('DateOfIssue')
+        serializer = PassportSerializer(passports, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Passport.DoesNotExist:
+        return Response("Passports not found for the specified client.", status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(['GET'])
-def get_all_passports(request):
-    passports = Passport.objects.all()
-    serializer = PassportSerializer(passports, many=True)
-    return Response(serializer.data)
+def get_all_passports_desc(request, client_id):
+    try:
+        passports = Passport.objects.filter(Client=client_id).order_by('-DateOfIssue')
+        serializer = PassportSerializer(passports, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Passport.DoesNotExist:
+        return Response("Passports not found for the specified client.", status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['DELETE'])
@@ -258,7 +288,7 @@ def get_actual_license(request, client_id):
         if license:
                 license= license[0]
         else:
-                license= None
+                license = None
         serializer = LicenseSerializer(license)
         return Response(serializer.data)
 
@@ -268,10 +298,24 @@ def get_actual_license(request, client_id):
 	
 
 @api_view(['GET'])
-def get_all_licenses(request):
-    licenses = License.objects.all()
-    serializer = LicenseSerializer(licenses, many=True)
-    return Response(serializer.data)
+def get_all_licenses(request, client_id):
+    try:
+        licenses = License.objects.filter(Client=client_id).order_by('DateOfIssue')
+        serializer = LicenseSerializer(licenses, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except License.DoesNotExist:
+        return Response("Licenses not found for the specified client.", status=status.HTTP_404_NOT_FOUND)
+
+   
+@api_view(['GET'])
+def get_all_licenses_desc(request, client_id):
+    try:
+        licenses = License.objects.filter(Client=client_id).order_by('-DateOfIssue')
+        serializer = LicenseSerializer(licenses, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except License.DoesNotExist:
+        return Response("Licenses not found for the specified client.", status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(['DELETE'])
 def delete_license(request, pk):
@@ -325,10 +369,13 @@ def get_car(request, pk):
 
 
 @api_view(['GET'])
-def get_all_cars(request):
-    cars = Car.objects.all()
-    serializer = CarSerializer(cars, many=True)
-    return Response(serializer.data)
+def get_all_cars(request, client_id):
+    try:
+        cars = Car.objects.filter(Client=client_id)
+        serializer = CarSerializer(cars, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Car.DoesNotExist:
+        return Response("Cars not found for the specified client.", status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['DELETE'])
@@ -345,12 +392,15 @@ def delete_car(request, pk):
 
 
 @api_view(['GET'])
-def filter_clients_by_name(request, name):
-    # Фильтруем клиентов по имени (нечувствительно к регистру)
-    clients = Client.objects.filter(name__icontains=name)
-    
+def filter_cars(request):
+    registration_num = request.GET.get('registrationNumber', None)
+    cars = None
+    if registration_num:
+        cars = Car.objects.filter(RegistrationNumber__icontains=registration_num)
     # Используем сериализатор для преобразования результатов в JSON
-    serializer = ClientSerializer(clients, many=True)
+    serializer = CarSerializer(cars, many=True)
     
     return Response(serializer.data)
+
+
 
