@@ -7,7 +7,8 @@ from rest_framework.test import APIClient
 from .models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
-
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import api_view, parser_classes
 
 
 @api_view(['POST'])
@@ -44,6 +45,18 @@ def get_client(request, pk):
         return Response(serializer.data)
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def get_client_phone(request):
+    phone = request.GET.get('phone', None)
+    client = None
+    if phone:
+        client = Client.objects.filter(Phone__icontains=phone)
+    # Используем сериализатор для преобразования результатов в JSON
+    serializer = ClientSerializer(client, many=True)
+    
+    return Response(serializer.data)
 
 
 @api_view(['DELETE'])
@@ -166,6 +179,10 @@ def create_passport(request):
         print(serializer.errors)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['POST'])
+def send_photo_passport(request):
+    return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['PUT'])
 def update_passport(request, pk):
